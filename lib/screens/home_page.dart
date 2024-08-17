@@ -6,7 +6,6 @@ import 'package:gallery_picker/models/media_file.dart';
 
 class HomePage extends StatelessWidget {
   File? selectedMedia;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,10 +16,10 @@ class HomePage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           List<MediaFile>? media = await GalleryPicker.pickMedia(context: context, singleMedia: true);
+          // Do something with the selected media if needed
         },
         child: const Icon(Icons.add),
       ),
-      
     );
   }
 }
