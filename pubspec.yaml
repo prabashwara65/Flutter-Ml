@@ -30,7 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  google_ml_kit: ^0.10.0  # Check for the latest version
+  google_mlkit_text_recognition: ^0.13.0
+  gallery_picker: ^0.5.1
   camera: ^0.10.0
   image_picker: ^0.8.0
   permission_handler: ^10.2.0
