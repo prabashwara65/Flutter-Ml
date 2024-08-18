@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'screens/home_page.dart'; // Import HomePage
+import 'screens/initial_screen.dart'; // Import InitialScreen
 
 void main() {
   runApp(MyApp());
@@ -9,11 +9,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Text Scanner',
+      title: 'Foodie App',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.teal,
       ),
-      home: HomePage(), // Set HomePage as the initial screen
+      home: InitialScreen(), // Set InitialScreen as the initial screen
     );
   }
 }
