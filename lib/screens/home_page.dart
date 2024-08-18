@@ -10,7 +10,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   File? selectedMedia;
-  String? extractedText; // To hold the extracted text
+  String? extractedText;
 
   @override
   Widget build(BuildContext context) {
@@ -18,11 +18,25 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Text Recognition'),
+        backgroundColor: Colors.teal,
       ),
-      body: _buildUI(),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (selectedMedia != null) _buildImagePreview(),
+            const SizedBox(height: 16),
+            _buildExtractTextView(),
+            const SizedBox(height: 20),
+            _buildActionButtons(),
+          ],
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: _pickImage,
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add_a_photo),
+        backgroundColor: Colors.teal,
       ),
     );
   }
@@ -38,7 +52,7 @@ class _HomePageState extends State<HomePage> {
           selectedMedia = file;
           extractedText = null; // Reset extracted text when a new image is picked
         });
-        _extractText(file); // Extract text as soon as the image is picked
+        await _extractText(file); // Extract text as soon as the image is picked
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Selected file does not exist')),
@@ -51,30 +65,94 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Widget _buildUI() {
-    return Center(
-      child: selectedMedia == null
-        ? const Text("No image selected")
-        : Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.file(selectedMedia!, width: 200),
-              const SizedBox(height: 20),
-              _extractTextView(),
-            ],
+  Widget _buildImagePreview() {
+    return Container(
+      width: double.infinity,
+      height: MediaQuery.of(context).size.height * 0.4,
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(12.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: Offset(0, 3),
           ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12.0),
+        child: Image.file(
+          selectedMedia!,
+          fit: BoxFit.cover,
+        ),
+      ),
     );
   }
 
-  Widget _extractTextView() {
+  Widget _buildExtractTextView() {
     if (extractedText == null) {
-      return const Center(
-        child: Text("Extracting text...", style: TextStyle(fontSize: 18)),
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: const CircularProgressIndicator(),
+        ),
       );
     }
-    return Text(
-      extractedText!,
-      style: const TextStyle(fontSize: 18),
+    return Container(
+      padding: const EdgeInsets.all(16.0),
+      decoration: BoxDecoration(
+        color: Colors.teal[50],
+        borderRadius: BorderRadius.circular(12.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Text(
+        extractedText ?? "No result",
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w500,
+          color: Colors.teal,
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  Widget _buildActionButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ElevatedButton.icon(
+          onPressed: _pickImage,
+          icon: const Icon(Icons.add_a_photo),
+          label: const Text('Pick Image'),
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white, backgroundColor: Colors.teal,
+          ),
+        ),
+        const SizedBox(width: 16),
+        ElevatedButton.icon(
+          onPressed: () {
+            setState(() {
+              selectedMedia = null;
+              extractedText = null;
+            });
+          },
+          icon: const Icon(Icons.clear),
+          label: const Text('Clear'),
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white, backgroundColor: Colors.red,
+          ),
+        ),
+      ],
     );
   }
 
