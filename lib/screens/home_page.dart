@@ -147,7 +147,7 @@ class _HomePageState extends State<HomePage> {
 
     if (extractedText == null) {
       return const Center(
-        child: Text("No result"),
+        child: Text("Take/Choose image"),
       );
     }
 
