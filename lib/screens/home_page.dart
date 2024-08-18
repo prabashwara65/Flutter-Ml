@@ -21,6 +21,7 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _pickImage,
         child: const Icon(Icons.add),
+        
       ),
     );
   }
@@ -53,5 +54,14 @@ class _HomePageState extends State<HomePage> {
         ? const Text("No image selected")
         : Image.file(selectedMedia!, width: 200),
     );
+  }
+
+   Widget _extractTextView() {
+    if(selectedMedia == null){
+      return const Center(
+        child: Text("No result"),
+      );
+    }
+    return Container();
   }
 }
