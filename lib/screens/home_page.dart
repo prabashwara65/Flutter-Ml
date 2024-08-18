@@ -11,6 +11,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   File? selectedMedia;
   String? extractedText;
+  bool _isExpanded = false;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +53,7 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           selectedMedia = file;
           extractedText = null; // Reset extracted text when a new image is picked
+          _isLoading = true; // Start loading animation
         });
         await _extractText(file); // Extract text as soon as the image is picked
       } else {
@@ -92,14 +95,18 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildExtractTextView() {
-    if (extractedText == null) {
+    if (_isLoading) {
       return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: const CircularProgressIndicator(),
-        ),
+        child: CircularProgressIndicator(),
       );
     }
+
+    if (extractedText == null) {
+      return const Center(
+        child: Text("No result"),
+      );
+    }
+
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
@@ -114,14 +121,40 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      child: Text(
-        extractedText ?? "No result",
-        style: const TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w500,
-          color: Colors.teal,
-        ),
-        textAlign: TextAlign.center,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            _isExpanded
+                ? extractedText!
+                : (extractedText!.length > 100
+                    ? extractedText!.substring(0, (extractedText!.length * 0.24).toInt()) + '...'
+                    : extractedText!),
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w500,
+              color: Colors.teal,
+            ),
+            textAlign: TextAlign.start,
+          ),
+          const SizedBox(height: 10),
+          if (extractedText!.length > 100)
+            GestureDetector(
+              onTap: () {
+                setState(() {
+                  _isExpanded = !_isExpanded;
+                });
+              },
+              child: Text(
+                _isExpanded ? 'Show Less' : 'Show More',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.teal,
+                ),
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -165,12 +198,16 @@ class _HomePageState extends State<HomePage> {
       final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
       setState(() {
         extractedText = recognizedText.text;
+        _isLoading = false; // Stop loading animation
       });
     } catch (e) {
       print('Error extracting text: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to extract text')),
       );
+      setState(() {
+        _isLoading = false; // Stop loading animation on error
+      });
     } finally {
       textRecognizer.close();
     }
