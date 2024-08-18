@@ -1,9 +1,7 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:gallery_picker/gallery_picker.dart';
 import 'package:gallery_picker/models/media_file.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -22,25 +20,10 @@ class _HomePageState extends State<HomePage> {
       ),
       body: _buildUI(),
       floatingActionButton: FloatingActionButton(
-        onPressed: _checkPermissionsAndPickMedia,
+        onPressed: _pickMedia,
         child: const Icon(Icons.add),
       ),
     );
-  }
-
-  Future<void> _checkPermissionsAndPickMedia() async {
-    // Request storage permission
-    PermissionStatus status = await Permission.storage.request();
-
-    if (status.isGranted) {
-      // If permission is granted, proceed to pick media
-      _pickMedia();
-    } else if (status.isDenied || status.isPermanentlyDenied) {
-      // If permission is denied, show a message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Storage permission is required to pick an image.')),
-      );
-    }
   }
 
   Future<void> _pickMedia() async {
@@ -48,18 +31,32 @@ class _HomePageState extends State<HomePage> {
       List<MediaFile>? media = await GalleryPicker.pickMedia(context: context, singleMedia: true);
       
       if (media != null && media.isNotEmpty) {
-        var data = await media.first.getFile();
-        print('Selected media path: ${data.path}'); // Debug print
-        if (await data.exists()) {
-          setState(() {
-            selectedMedia = data;
-          });
+        var mediaFile = media.first;
+        // Verify that mediaFile is indeed a file and get its path
+        var file = await mediaFile.getFile();
+        
+        if (file != null) {
+          print('Selected media path: ${file.path}'); // Debug print
+          if (await file.exists()) {
+            print('File exists and can be accessed');
+            setState(() {
+              selectedMedia = file;
+            });
+          } else {
+            print('File does not exist');
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Selected file does not exist')),
+            );
+          }
         } else {
-          print('File does not exist');
+          print('Failed to get the file from media');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to get the file from media')),
+          );
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('No image selected')),
+          SnackBar(content: Text('No media selected')),
         );
       }
     } catch (e) {
