@@ -30,22 +30,66 @@ class _HomePageState extends State<HomePage> {
             if (selectedMedia != null) _buildImagePreview(),
             const SizedBox(height: 16),
             _buildExtractTextView(),
-            const SizedBox(height: 20),
-            _buildActionButtons(),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _pickImage,
-        child: const Icon(Icons.add_a_photo),
-        backgroundColor: Colors.teal,
+      floatingActionButton: Stack(
+        children: [
+          Positioned(
+            bottom: 16,
+            left: 16, // Add margin from the left
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16.0), // Additional margin
+              child: FloatingActionButton(
+                onPressed: () {
+                  setState(() {
+                    selectedMedia = null;
+                    extractedText = null;
+                  });
+                },
+                child: const Icon(Icons.clear),
+                backgroundColor: Colors.red,
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 16,
+            right: 16,
+            child: FloatingActionButton(
+              onPressed: _pickImage,
+              child: const Icon(Icons.add_a_photo),
+              backgroundColor: Colors.teal,
+            ),
+          ),
+        ],
       ),
     );
   }
 
   Future<void> _pickImage() async {
     final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await showDialog<XFile?>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Select Image Source'),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              final pickedFile = await picker.pickImage(source: ImageSource.camera);
+              Navigator.of(context).pop(pickedFile);
+            },
+            child: const Text('Take Photo'),
+          ),
+          TextButton(
+            onPressed: () async {
+              final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+              Navigator.of(context).pop(pickedFile);
+            },
+            child: const Text('Choose from Gallery'),
+          ),
+        ],
+      ),
+    );
 
     if (pickedFile != null) {
       final file = File(pickedFile.path);
@@ -156,36 +200,6 @@ class _HomePageState extends State<HomePage> {
             ),
         ],
       ),
-    );
-  }
-
-  Widget _buildActionButtons() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        ElevatedButton.icon(
-          onPressed: _pickImage,
-          icon: const Icon(Icons.add_a_photo),
-          label: const Text('Pick Image'),
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white, backgroundColor: Colors.teal,
-          ),
-        ),
-        const SizedBox(width: 16),
-        ElevatedButton.icon(
-          onPressed: () {
-            setState(() {
-              selectedMedia = null;
-              extractedText = null;
-            });
-          },
-          icon: const Icon(Icons.clear),
-          label: const Text('Clear'),
-          style: ElevatedButton.styleFrom(
-            foregroundColor: Colors.white, backgroundColor: Colors.red,
-          ),
-        ),
-      ],
     );
   }
 
