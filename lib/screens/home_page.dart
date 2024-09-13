@@ -54,6 +54,9 @@ class _HomePageState extends State<HomePage> {
         }else{
           String? response = event.content?.parts?.fold("", (previous , current) => "$previous$current") ?? "";
           ChatMessage newMessage = ChatMessage(user: geminiUser, createdAt: DateTime.now(), text: response);
+          setState(() {
+            messages.add(newMessage);
+          });
         }
       });
 
