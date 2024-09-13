@@ -10,14 +10,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final ChatUser currentUser = ChatUser(id: "0" , firstName: "user"); // Define current user
-  final ChatUser geminiUser = ChatUser(id: "1" , firstName: "Gemini");
+  final ChatUser geminiUser = ChatUser(id: "1" ,
+   firstName: "Gemini",
+   profileImage: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.reddit.com%2Fr%2FTech_Philippines%2Fcomments%2F1apkec4%2Fhow_to_access_google_gemini_on_your_phone_if_you%2F&psig=AOvVaw200QijMF1OJU33v-1o_XIq&ust=1726296264844000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCMCSze-ov4gDFQAAAAAdAAAAABAJ");
+  
+  
   final List<ChatMessage> messages = []; // Define list of messages
 
-  void onSend(ChatMessage message) {
-    setState(() {
-      messages.add(message);
-    });
-  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +31,13 @@ class _HomePageState extends State<HomePage> {
 
   Widget buildUI() {
     return DashChat(
-      currentUser: currentUser,
-      onSend: onSend,
-      messages: messages,
+      currentUser: currentUser, onSend: onSend, messages: messages,
     );
+  }
+
+  void onSend(ChatMessage message) {
+    setState(() {
+      messages.add(message);
+    });
   }
 }
