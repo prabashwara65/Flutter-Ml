@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
    profileImage: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.reddit.com%2Fr%2FTech_Philippines%2Fcomments%2F1apkec4%2Fhow_to_access_google_gemini_on_your_phone_if_you%2F&psig=AOvVaw200QijMF1OJU33v-1o_XIq&ust=1726296264844000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCMCSze-ov4gDFQAAAAAdAAAAABAJ");
   
   
-  final List<ChatMessage> messages = []; // Define list of messages
+  List<ChatMessage> messages = []; // Define list of messages
 
   
 
@@ -51,8 +51,17 @@ class _HomePageState extends State<HomePage> {
         ChatMessage? lastmessage = messages.firstOrNull;
         if(lastmessage != null && lastmessage.user == geminiUser){
 
+          lastmessage = messages.removeAt(0);
+          String? response = event.content?.parts?.fold("", (previous , current) => "$previous ${current.text}") ?? "";
+          lastmessage.text += response;
+          setState(() {
+
+            //this code has changed - nor original code
+            messages.add(messages as ChatMessage);
+          });
+
         }else{
-          String? response = event.content?.parts?.fold("", (previous , current) => "$previous$current") ?? "";
+          String? response = event.content?.parts?.fold("", (previous , current) => "$previous ${current.text}") ?? "";
           ChatMessage newMessage = ChatMessage(user: geminiUser, createdAt: DateTime.now(), text: response);
           setState(() {
             messages.add(newMessage);
