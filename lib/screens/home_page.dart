@@ -9,7 +9,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final ChatUser currentUser = ChatUser(id: '1'); // Define current user
+  final ChatUser currentUser = ChatUser(id: "0" , firstName: "user"); // Define current user
+  final ChatUser geminiUser = ChatUser(id: "1" , firstName: "Gemini");
   final List<ChatMessage> messages = []; // Define list of messages
 
   void onSend(ChatMessage message) {
