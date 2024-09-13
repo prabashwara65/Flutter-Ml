@@ -52,7 +52,8 @@ class _HomePageState extends State<HomePage> {
         if(lastmessage != null && lastmessage.user == geminiUser){
 
         }else{
-          ChatMessage newMessage = ChatMessage(user: geminiUser, createdAt: DateTime.now(), text: )
+          String? response = event.content?.parts?.fold("", (previous , current) => "$previous$current") ?? "";
+          ChatMessage newMessage = ChatMessage(user: geminiUser, createdAt: DateTime.now(), text: response);
         }
       });
 
