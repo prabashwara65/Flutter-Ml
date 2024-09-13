@@ -1,5 +1,6 @@
 import 'package:dash_chat_2/dash_chat_2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gemini/flutter_gemini.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -9,6 +10,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  final Gemini gemini = Gemini.instance;
+
   final ChatUser currentUser = ChatUser(id: "0" , firstName: "user"); // Define current user
   final ChatUser geminiUser = ChatUser(id: "1" ,
    firstName: "Gemini",
@@ -39,5 +43,21 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       messages.add(message);
     });
+
+    try {
+      
+      String question = message.text;
+      gemini.streamGenerateContent(question).listen((event) {
+        ChatMessage? lastmessage = messages.firstOrNull;
+        if(lastmessage != null && lastmessage.user == geminiUser){
+
+        }else{
+          ChatMessage newMessage = ChatMessage(user: geminiUser, createdAt: DateTime.now(), text: )
+        }
+      });
+
+    } catch (e) {
+      print(e);
+    }
   }
 }
