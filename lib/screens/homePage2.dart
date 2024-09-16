@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_ml/auth.dart';
+import 'package:flutter_ml/screens/home_page.dart';
 
 
 class Homepage2 extends StatelessWidget {
@@ -22,6 +23,20 @@ class Homepage2 extends StatelessWidget {
       child: const Text("Sign out")
       );
   }
+
+
+  //Button for navigate to home
+  Widget _goToHomePageButton(BuildContext context) {
+    return ElevatedButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const HomePage()),
+        );
+      },
+      child: const Text("Home"),
+    );
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -39,6 +54,7 @@ class Homepage2 extends StatelessWidget {
           children: <Widget>[
             _userUid(),
             _signOutButton(),
+            _goToHomePageButton(context),
           ],
         ),
       ),

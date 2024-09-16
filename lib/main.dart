@@ -15,7 +15,7 @@ Future <void> main() async {
     projectId: 'ml-app-5f335',
   )
 );
-  //Gemini.init(apiKey: GEMINI_API_KEY);
+  Gemini.init(apiKey: GEMINI_API_KEY);
   runApp(MyApp());
 }
 
