@@ -27,7 +27,7 @@ class Homepage2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: _title(),
+        title: const Text('Hi this is title'), //_title()
       ),
       body: Container(
         height: double.infinity,
