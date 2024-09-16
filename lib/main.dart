@@ -13,7 +13,6 @@ Future <void> main() async {
     appId: 'ml-app-5f335',
     messagingSenderId: 'sendid',
     projectId: 'ml-app-5f335',
-    // storageBucket: 'myapp-b9yt18.appspot.com',
   )
 );
   //Gemini.init(apiKey: GEMINI_API_KEY);
