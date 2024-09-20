@@ -1,6 +1,6 @@
 
-import 'package:flutter_ml/screens/homePage2.dart';
-import 'package:flutter_ml/screens/login_register.dart';
+import 'package:flutter_ml/screens/authFiles/homePage2.dart';
+import 'package:flutter_ml/screens/authFiles/login_register.dart';
 import 'package:flutter_ml/auth.dart';
 import 'package:flutter/material.dart';
 
